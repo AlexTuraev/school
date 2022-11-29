@@ -38,7 +38,8 @@ public class FacultyController {
     public ResponseEntity updateFaculty(@RequestBody Faculty faculty) {
         Faculty updatedFaculty = facultyService.updateFaculty(faculty);
         if (updatedFaculty == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.notFound().build();
         }else {
             return ResponseEntity.ok(faculty);
         }
@@ -48,9 +49,10 @@ public class FacultyController {
     public ResponseEntity removeFaculty(@PathVariable Long id) {
         Faculty faculty = facultyService.deleteFacultyById(id);
         if (faculty == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.notFound().build();
+        }else {
+            return ResponseEntity.ok(faculty);
         }
-        return ResponseEntity.ok(faculty);
     }
 
     @GetMapping

@@ -1,8 +1,9 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
-import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,38 +12,45 @@ import java.util.stream.Collectors;
 
 @Service
 public class FacultyService{
-    Map<Long, Faculty> faculties = new HashMap<>();
-    private Long idCounter = 1L;
+
+    //@Autowired
+    private final FacultyRepository facultyRepository;
+
+    public FacultyService(FacultyRepository facultyRepository) {
+        this.facultyRepository = facultyRepository;
+    }
 
     public Faculty createFaculty(Faculty faculty) {
-        faculty.setId(idCounter);
-        faculties.put(idCounter++, faculty);
-        return faculty;
+        return facultyRepository.save(faculty);
     }
 
     public Faculty getFacultyById(Long id) {
-        return faculties.get(id);
+        return facultyRepository.findById(id).get();
     }
 
     public Faculty updateFaculty(Faculty faculty) {
-        if (faculties.containsKey(faculty.getId())) {
-            faculties.put(faculty.getId(), faculty);
-            return faculty;
-        } else{
+        if (getFacultyById(faculty.getId()) == null) {
             return null;
+        }else {
+            return facultyRepository.save(faculty);
         }
-
     }
 
     public Faculty deleteFacultyById(Long id) {
-        return faculties.remove(id);
+        Faculty faculty = getFacultyById(id);
+        if (faculty == null) {
+            return null;
+        }else {
+            facultyRepository.deleteById(id);
+            return faculty;
+        }
     }
 
     public Collection<Faculty> getAllFaculties() {
-        return faculties.values();
+        return facultyRepository.findAll();
     }
 
     public Collection <Faculty> getFacultiesByColor(String color) {
-        return faculties.values().stream().filter((faculty)->faculty.getColor().equals(color)).collect(Collectors.toList());
+        return facultyRepository.findAll().stream().filter((faculty)->faculty.getColor().equals(color)).collect(Collectors.toList());
     }
 }

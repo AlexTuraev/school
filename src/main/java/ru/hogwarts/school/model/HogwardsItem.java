@@ -1,3 +1,6 @@
+// РАНЕЕ ИСПОЛЬЗОВАЛСЯ КАК РОДИТЕЛЬСКИЙ ДЛЯ  Student и Faculty
+
+/*
 package ru.hogwarts.school.model;
 
 import java.util.Objects;
@@ -40,3 +43,4 @@ abstract public class HogwardsItem {
         return Objects.hash(name);
     }
 }
+*/
