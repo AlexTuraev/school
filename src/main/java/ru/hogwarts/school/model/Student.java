@@ -9,7 +9,7 @@ import java.util.Objects;
 @Entity
 public class Student{
     @javax.persistence.Id
-    @Id
+    //@Id
     @GeneratedValue
     private Long id;
     private String name;

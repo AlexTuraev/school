@@ -11,6 +11,7 @@ import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @RequestMapping("student")
 @RestController
@@ -60,9 +61,9 @@ public class StudentController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<Collection<Student>> getStudentsByAge(@RequestParam("age") int age) {
+    public ResponseEntity<List<Student>> getStudentsByAge(@RequestParam("age") int age) {
         if (age > 0) {
-            return ResponseEntity.ok(studentService.getStudentsByAge(age));
+            return ResponseEntity.ok(studentService.findByAge(age));
         }else {
             return ResponseEntity.ok(Collections.emptyList());
         }
