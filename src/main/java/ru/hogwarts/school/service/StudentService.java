@@ -52,7 +52,11 @@ public class StudentService {
     }
 
     public List<Student> findByAge (int age) {
-        System.out.println("age = " + age);
+        //System.out.println("age = " + age);
         return studentRepository.findByAge(age);
+    }
+
+    public List<Student> getStudentsByAgeBetweenMinMax(int min, int max) {
+        return studentRepository.findByAgeBetween(min, max);
     }
 }
