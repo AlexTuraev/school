@@ -4,17 +4,24 @@ import org.springframework.data.annotation.Id;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 public class Faculty {
     @javax.persistence.Id
-    //@Id
     @GeneratedValue
     private Long id;
 
     private String name;
     private String color;
+
+    @OneToMany(mappedBy = "faculty")
+    private List<Student> students;
 
     public String getName() {
         return name;
@@ -22,6 +29,15 @@ public class Faculty {
 
     public String getColor() {
         return color;
+    }
+
+    /*public List<Student> getStudents() {
+        //return new ArrayList<>(students);
+        return null;
+    }*/
+
+    public List<Student> obtainStudentsList() {
+        return new ArrayList<>(students);
     }
 
     public void setName(String name) {

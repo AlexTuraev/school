@@ -78,4 +78,14 @@ public class FacultyController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
+
+    @GetMapping("/getstudents/{id}")
+    public ResponseEntity<List<Student>> getStudentsByIdOfFaculty(@PathVariable Long id) {
+        Faculty faculty = facultyService.getFacultyById(id);
+        if (faculty == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(facultyService.getStudentsByIdOfFaculty(id));
+        }
+    }
 }
