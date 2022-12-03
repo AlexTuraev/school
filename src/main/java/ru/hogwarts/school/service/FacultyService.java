@@ -3,12 +3,10 @@ package ru.hogwarts.school.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -52,5 +50,23 @@ public class FacultyService{
     }
     public Collection<Faculty> getAllFaculties() {
         return facultyRepository.findAll();
+    }
+
+    public List<Faculty> getFacultiesByColorOrName(String param) {
+        List <Faculty> facultyList = facultyRepository.findByColorIgnoreCase(param);
+        facultyList.addAll(facultyRepository.findByNameIgnoreCase(param));
+
+        Set <Faculty> facultySet = new HashSet<>(facultyList); // чтобы избежать дублей, если имя и цвет совпадают
+        return facultySet.stream().toList();
+    }
+
+    public List<Student> getStudentsByIdOfFaculty(Long id) {
+        Faculty faculty = facultyRepository.findById(id).orElse(null);
+
+        if (faculty == null) {
+            return null;
+        } else {
+            return faculty.obtainStudentsList();
+        }
     }
 }
