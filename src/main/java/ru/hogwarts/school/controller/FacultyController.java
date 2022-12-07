@@ -39,7 +39,6 @@ public class FacultyController {
     public ResponseEntity updateFaculty(@RequestBody Faculty faculty) {
         Faculty updatedFaculty = facultyService.updateFaculty(faculty);
         if (updatedFaculty == null) {
-            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).build(); исправил статус
             return ResponseEntity.notFound().build();
         }else {
             return ResponseEntity.ok(faculty);
