@@ -26,8 +26,11 @@ public class AvatarService {
         this.avatarRepository = avatarRepository;
     }
 
-    public void uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
-        Student student = studentRepository.getById(studentId);
+    public boolean uploadAvatar(Long studentId, MultipartFile avatarFile) throws IOException {
+        Student student = studentRepository.findById(studentId).orElse(null);
+        if (student == null) {
+            return false;
+        }
 
         Path filePath = Path.of(avatarsDir + student + "." + getExtentions(avatarFile.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
@@ -41,19 +44,26 @@ public class AvatarService {
             bis.transferTo(bos);
         }
 
-        // В БАЗУ НЕ СОХРАНЯЕТ. РАЗОБРАТЬСЯ
         Avatar avatar = avatarRepository.findByStudentId(studentId);
+        if (avatar == null) {
+            avatar = new Avatar();
+        }
         avatar.setStudent(student);
         avatar.setFilePath(filePath.toString());
         avatar.setFileSize(avatarFile.getSize());
         avatar.setMediaType(avatarFile.getContentType());
         avatar.setData(avatarFile.getBytes());
         avatarRepository.save(avatar);
+        return true;
     }
 
     /* Получение подстроки строки (расширения файла), начиная с символа "." до конца строки,
     начиная поиск "." с конца.*/
     private String getExtentions(String fileName) {
         return fileName.substring(fileName.lastIndexOf(".")+1);
+    }
+
+    public Avatar findAvatarByStudentId(Long studentId) {
+        return avatarRepository.findByStudentId(studentId);
     }
 }
