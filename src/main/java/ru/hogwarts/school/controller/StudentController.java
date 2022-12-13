@@ -1,6 +1,5 @@
 package ru.hogwarts.school.controller;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
@@ -85,5 +84,20 @@ public class StudentController {
         } else {
             return ResponseEntity.ok(faculty);
         }
+    }
+
+    @GetMapping("/count-of-students")
+    public ResponseEntity <Integer> getCountOfStudents() {
+        return ResponseEntity.ok().body(studentService.getCountOfStudents());
+    }
+
+    @GetMapping("/avg-age")
+    public ResponseEntity <Float> getStudentsAverageAge() {
+        return ResponseEntity.ok().body(studentService.getStudentsAverageAge());
+    }
+
+    @GetMapping("/get-last-five")
+    public ResponseEntity <List<Student>> getLast5Students() {
+        return ResponseEntity.ok().body(studentService.getLast5Students());
     }
 }

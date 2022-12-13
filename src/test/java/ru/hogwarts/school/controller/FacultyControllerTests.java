@@ -37,7 +37,7 @@ public class FacultyControllerTests {
 
     @Test
     void createFacultyTest() throws Exception {
-        Long id = 1L;
+        long id = 1L;
         String name = "testFacultyName";
         String color = "testColor";
 
@@ -70,13 +70,12 @@ public class FacultyControllerTests {
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.color").value(color));
 
-        // Почему то не работает этот тест. В отладке faculty везде значения Null ??? Разобраться
-        /*mockMvc.perform(MockMvcRequestBuilders
+        mockMvc.perform(MockMvcRequestBuilders
                         .put("/faculty")
                         .content(facultyJsonObject.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name").value(name))
-                .andExpect(jsonPath("$.color").value(color));*/
+                .andExpect(jsonPath("$.color").value(color));
     }
 }
