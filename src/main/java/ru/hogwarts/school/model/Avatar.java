@@ -86,8 +86,8 @@ public class Avatar {
                 ", filePath='" + filePath + '\'' +
                 ", fileSize=" + fileSize +
                 ", mediaType='" + mediaType + '\'' +
-                ", data=" + Arrays.toString(data) +
-                ", student=" + student +
+                //", data=" + Arrays.toString(data) +
+                //", student=" + student +
                 '}';
     }
 }
