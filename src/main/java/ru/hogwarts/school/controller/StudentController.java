@@ -100,4 +100,13 @@ public class StudentController {
     public ResponseEntity <List<Student>> getLast5Students() {
         return ResponseEntity.ok().body(studentService.getLast5Students());
     }
+
+    @GetMapping("/get-names-start-a")
+    public ResponseEntity<List<String>> getStudentsNamesStartWithA() {
+        return ResponseEntity.ok(studentService.getStudentsNamesStartWithA());
+    }
+
+    public ResponseEntity<Float> getStudentAverageAgeUsingStream() {
+        return ResponseEntity.ok(studentService.getStudentAverageAgeUsingStream());
+    }
 }
