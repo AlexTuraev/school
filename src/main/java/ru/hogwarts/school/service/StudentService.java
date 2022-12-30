@@ -104,8 +104,7 @@ public class StudentService {
 
     // ДОДЕЛАТЬ Task 4.5 step 2
     public Float getStudentAverageAgeUsingStream() {
-        /*return studentRepository.findAll().stream()
-                .*/
-        return null;
+        List <Student> listStudents = studentRepository.findAll();
+        return (float)listStudents.stream().mapToInt(s->s.getAge()).sum() / listStudents.size();
     }
 }

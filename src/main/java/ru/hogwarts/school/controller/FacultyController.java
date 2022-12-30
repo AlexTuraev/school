@@ -10,6 +10,7 @@ import ru.hogwarts.school.service.FacultyService;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("faculty")
 @RestController
@@ -85,5 +86,16 @@ public class FacultyController {
         } else {
             return ResponseEntity.ok(facultyService.getStudentsByIdOfFaculty(id));
         }
+    }
+
+    @GetMapping("/get-longest-name")
+    public ResponseEntity<String> getLongestFacultyName() {
+        Optional<String> optional = facultyService.getLongestFacultyName();
+        if (optional.isPresent()) {
+            return ResponseEntity.ok(optional.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 }

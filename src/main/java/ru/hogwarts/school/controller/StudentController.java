@@ -106,6 +106,7 @@ public class StudentController {
         return ResponseEntity.ok(studentService.getStudentsNamesStartWithA());
     }
 
+    @GetMapping("/avg-age-use-stream")
     public ResponseEntity<Float> getStudentAverageAgeUsingStream() {
         return ResponseEntity.ok(studentService.getStudentAverageAgeUsingStream());
     }
