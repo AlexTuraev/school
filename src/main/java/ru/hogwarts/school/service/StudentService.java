@@ -115,7 +115,7 @@ public class StudentService {
         System.out.println("Вычисление 1-м потоком: " + (System.currentTimeMillis() - start));
 
         start = System.currentTimeMillis();
-        sum = Stream.iterate(1, a -> a +1).parallel().limit(1_000_000).reduce(0, (a, b) -> a + b );
+        sum = Stream.iterate(1, a -> a +1).limit(1_000_000).parallel().reduce(0, (a, b) -> a + b );
         System.out.println("Вычисление параллельными потоками: " + (System.currentTimeMillis() - start));
 
         return sum;
