@@ -110,4 +110,9 @@ public class StudentController {
     public ResponseEntity<Float> getStudentAverageAgeUsingStream() {
         return ResponseEntity.ok(studentService.getStudentAverageAgeUsingStream());
     }
+
+    @GetMapping("/parallel-calculation")
+    public ResponseEntity<Integer> getFunctionResult() {
+        return ResponseEntity.ok(studentService.getFunctionResult());
+    }
 }

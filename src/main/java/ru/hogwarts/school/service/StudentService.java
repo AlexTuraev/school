@@ -11,6 +11,7 @@ import ru.hogwarts.school.repository.StudentRepository;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class StudentService {
@@ -106,5 +107,17 @@ public class StudentService {
     public Float getStudentAverageAgeUsingStream() {
         List <Student> listStudents = studentRepository.findAll();
         return (float)listStudents.stream().mapToInt(s->s.getAge()).sum() / listStudents.size();
+    }
+
+    public Integer getFunctionResult() {
+        long start = System.currentTimeMillis();
+        int sum = Stream.iterate(1, a -> a +1).limit(1_000_000).reduce(0, (a, b) -> a + b );
+        System.out.println("Вычисление 1-м потоком: " + (System.currentTimeMillis() - start));
+
+        start = System.currentTimeMillis();
+        sum = Stream.iterate(1, a -> a +1).parallel().limit(1_000_000).reduce(0, (a, b) -> a + b );
+        System.out.println("Вычисление параллельными потоками: " + (System.currentTimeMillis() - start));
+
+        return sum;
     }
 }
