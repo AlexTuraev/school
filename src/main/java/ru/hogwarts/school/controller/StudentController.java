@@ -115,4 +115,22 @@ public class StudentController {
     public ResponseEntity<Integer> getFunctionResult() {
         return ResponseEntity.ok(studentService.getFunctionResult());
     }
+
+    @GetMapping("/print-students-using-threads")
+    public ResponseEntity<String> printStudentsUsingThread() {
+        studentService.printStudentsUsingThread();
+        return ResponseEntity.ok("The program printed student's names into the console");
+    }
+
+    @GetMapping("/print-students-using-threads-and-sync-method")
+    public ResponseEntity<String> synchronizationPrintUsingThread() {
+        studentService.printStudentsUsingThreadAndSyncMethod();
+        return ResponseEntity.ok("The program printed student's names into the console. It is used synchronized method.");
+    }
+
+    @GetMapping("/print-students-using-threads-and-sync-flag")
+    public ResponseEntity<String> synchronizationPrintUsingThreadWithFlag() {
+        studentService.printStudentsUsingThreadWithFlag();
+        return ResponseEntity.ok("The program synchronously printed student's names into the console. It is used synchronized flag");
+    }
 }
