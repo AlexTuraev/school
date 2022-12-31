@@ -22,6 +22,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
 
     private Object flagPrintConsole = new Object(); // для синхронизации потоков
+    private Integer syncCount = 0; // счетчик для синхронизации
 
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -152,30 +153,34 @@ public class StudentService {
 
     public void printStudentsUsingThreadAndSyncMethod() {
         List <Student> students = studentRepository.findAll();
+
         if (students.size() >= 6) {
-            printIntoConsoleUsingSyncMethod(students.get(0).getName());
-            printIntoConsoleUsingSyncMethod(students.get(1).getName());
+            printIntoConsoleUsingSyncMethod(students);
+            printIntoConsoleUsingSyncMethod(students);
 
             new Thread(
                     ()->{
-                        printIntoConsoleUsingSyncMethod(students.get(2).getName());
-                        printIntoConsoleUsingSyncMethod(students.get(3).getName());
+                        printIntoConsoleUsingSyncMethod(students);
+                        printIntoConsoleUsingSyncMethod(students);
                     }
             ).start();
 
             new Thread(
                     ()->{
-                        printIntoConsoleUsingSyncMethod(students.get(4).getName());
-                        printIntoConsoleUsingSyncMethod(students.get(5).getName());
+                        printIntoConsoleUsingSyncMethod(students);
+                        printIntoConsoleUsingSyncMethod(students);
                     }
             ).start();
         }
     }
 
-    private synchronized void printIntoConsoleUsingSyncMethod(String name) {
+    private void printIntoConsoleUsingSyncMethod(List<Student> students) {
         hardLongProcess();
 
-        System.out.println(name);
+        synchronized (syncCount) {
+            System.out.println(students.get(syncCount).getName());
+            syncCount++;
+        }
     }
 
     public void printStudentsUsingThreadWithFlag() {
