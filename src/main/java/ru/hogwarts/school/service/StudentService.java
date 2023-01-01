@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
-import ru.hogwarts.school.repository.FacultyRepository;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -21,7 +21,10 @@ public class StudentService {
     Logger logger = LoggerFactory.getLogger(StudentService.class);
     private final StudentRepository studentRepository;
 
-    public StudentService(StudentRepository studentRepository, FacultyRepository facultyRepository) {
+    private Object flagPrintConsole = new Object(); // для синхронизации потоков
+    private Integer syncCount = 0; // счетчик для синхронизации
+
+    public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
 
@@ -103,7 +106,6 @@ public class StudentService {
                 .sorted().collect(Collectors.toList());
     }
 
-    // ДОДЕЛАТЬ Task 4.5 step 2
     public Float getStudentAverageAgeUsingStream() {
         List <Student> listStudents = studentRepository.findAll();
         return (float)listStudents.stream().mapToInt(s->s.getAge()).sum() / listStudents.size();
@@ -119,5 +121,103 @@ public class StudentService {
         System.out.println("Вычисление параллельными потоками: " + (System.currentTimeMillis() - start));
 
         return sum;
+    }
+
+    public void printStudentsUsingThread() {
+        List <Student> students = studentRepository.findAll();
+        if (students.size() >= 6) {
+            printIntoConsole(students.get(0).getName());
+            printIntoConsole(students.get(1).getName());
+
+            new Thread(
+                    ()->{
+                        printIntoConsole(students.get(2).getName());
+                        printIntoConsole(students.get(3).getName());
+                    }
+            ).start();
+
+            new Thread(
+                    ()->{
+                        printIntoConsole(students.get(4).getName());
+                        printIntoConsole(students.get(5).getName());
+                    }
+            ).start();
+        }
+    }
+
+    private void printIntoConsole(String name) {
+        hardLongProcess();
+
+        System.out.println(name);
+    }
+
+    public void printStudentsUsingThreadAndSyncMethod() {
+        List <Student> students = studentRepository.findAll();
+
+        if (students.size() >= 6) {
+            printIntoConsoleUsingSyncMethod(students);
+            printIntoConsoleUsingSyncMethod(students);
+
+            new Thread(
+                    ()->{
+                        printIntoConsoleUsingSyncMethod(students);
+                        printIntoConsoleUsingSyncMethod(students);
+                    }
+            ).start();
+
+            new Thread(
+                    ()->{
+                        printIntoConsoleUsingSyncMethod(students);
+                        printIntoConsoleUsingSyncMethod(students);
+                    }
+            ).start();
+        }
+    }
+
+    private void printIntoConsoleUsingSyncMethod(List<Student> students) {
+        hardLongProcess();
+
+        synchronized (syncCount) {
+            System.out.println(students.get(syncCount).getName());
+            syncCount++;
+        }
+    }
+
+    public void printStudentsUsingThreadWithFlag() {
+        List <Student> students = studentRepository.findAll();
+        if (students.size() >= 6) {
+            printIntoConsoleUsingSyncFlag(students.get(0).getName());
+            printIntoConsoleUsingSyncFlag(students.get(1).getName());
+
+            new Thread(
+                    ()->{
+                        printIntoConsoleUsingSyncFlag(students.get(2).getName());
+                        printIntoConsoleUsingSyncFlag(students.get(3).getName());
+                    }
+            ).start();
+
+            new Thread(
+                    ()->{
+                        printIntoConsoleUsingSyncFlag(students.get(4).getName());
+                        printIntoConsoleUsingSyncFlag(students.get(5).getName());
+                    }
+            ).start();
+        }
+    }
+
+    private void printIntoConsoleUsingSyncFlag(String name) {
+        hardLongProcess();
+
+        synchronized (flagPrintConsole) {
+            System.out.println(name);
+        }
+    }
+
+    private void hardLongProcess() {
+        // Блок кода для демонстрации параллельности выполнения (трудоемкая операция)
+        String s = "";
+        for (int i = 0; i < 100_000; i++) {
+            s += i;
+        }
     }
 }
