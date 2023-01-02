@@ -10,6 +10,8 @@ import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class StudentService {
@@ -92,5 +94,30 @@ public class StudentService {
     public List<Student> getLast5Students() {
         logger.info("The method {} was called", "<<getLast5Students>>");
         return studentRepository.getLast5Students();
+    }
+
+    public List<String> getStudentsNamesStartWithA() {
+        return studentRepository.findAll().stream()
+                .map(s->s.getName().toUpperCase())
+                .filter(name->name.startsWith("A"))
+                .sorted().collect(Collectors.toList());
+    }
+
+    // ДОДЕЛАТЬ Task 4.5 step 2
+    public Float getStudentAverageAgeUsingStream() {
+        List <Student> listStudents = studentRepository.findAll();
+        return (float)listStudents.stream().mapToInt(s->s.getAge()).sum() / listStudents.size();
+    }
+
+    public Integer getFunctionResult() {
+        long start = System.currentTimeMillis();
+        int sum = Stream.iterate(1, a -> a +1).limit(1_000_000).reduce(0, (a, b) -> a + b );
+        System.out.println("Вычисление 1-м потоком: " + (System.currentTimeMillis() - start));
+
+        start = System.currentTimeMillis();
+        sum = Stream.iterate(1, a -> a +1).limit(1_000_000).parallel().reduce(0, (a, b) -> a + b );
+        System.out.println("Вычисление параллельными потоками: " + (System.currentTimeMillis() - start));
+
+        return sum;
     }
 }
